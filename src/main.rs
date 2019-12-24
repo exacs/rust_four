@@ -1,20 +1,33 @@
+
 fn main() {
     println!("Welcome to four-in-a-row!!! (implemented in Rust)");
-    print_board();
+    let width = 7;
+    let mut board: Vec<i32> = Vec::new();
+
+    for _v in 0..width {
+        board.push(0);
+    }
+
+    print_board(&board);
 }
 
-fn print_board() {
-    let width = 7;
+fn print_board(board: &Vec<i32>) {
     let height = 6;
 
-    for _h in 0..height {
-        for _w in 1..width+1 {
-            print!("· ")
+    for h in 0..height {
+        for w in board {
+            if *w >= height - h {
+                print!("X ");
+            } else {
+                print!("· ");
+            }
         }
-        println!()
+        println!();
     }
-    for n in 1..width+1 {
-        print!("{} ", n)
+
+    for n in 0..board.len() {
+        print!("{} ", n);
     }
+
     println!()
 }
