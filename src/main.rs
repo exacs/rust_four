@@ -9,6 +9,10 @@ fn main() {
     }
 
     print_board(&board);
+    play_piece(&mut board, 1);
+    play_piece(&mut board, 1);
+    play_piece(&mut board, 2);
+    print_board(&board);
 }
 
 fn print_board(board: &Vec<i32>) {
@@ -30,4 +34,8 @@ fn print_board(board: &Vec<i32>) {
     }
 
     println!()
+}
+
+fn play_piece(board: &mut Vec<i32>, index: usize) {
+    board[index] = board[index] + 1;
 }
