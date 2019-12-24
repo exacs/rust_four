@@ -1,11 +1,20 @@
-use std::io;
-
 fn main() {
     println!("Welcome to four-in-a-row!!! (implemented in Rust)");
-    let mut guess = String::new();
+    print_board();
+}
 
-    io::stdin().read_line(&mut guess)
-        .expect("Failed to read line");
+fn print_board() {
+    let width = 7;
+    let height = 6;
 
-    println!("You guessed: {}", guess);
+    for _h in 0..height {
+        for _w in 1..width+1 {
+            print!("· ")
+        }
+        println!()
+    }
+    for n in 1..width+1 {
+        print!("{} ", n)
+    }
+    println!()
 }
