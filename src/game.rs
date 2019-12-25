@@ -25,14 +25,9 @@ fn color_of_line (line: &Vec<Option<&Player>>) -> Option<Player> {
 }
 
 fn color_of_lines (lines: [Vec<Option<&Player>>; 4]) -> Option<Player> {
-    for line in lines.iter() {
-        match color_of_line(line) {
-            None => (),
-            c => return c,
-        }
-    }
-
-    return None
+    lines.iter()
+        .map(|line| color_of_line(line))
+        .find(|&color| color != None)?
 }
 
 impl Game {
