@@ -58,16 +58,18 @@ impl Board {
         Ok(())
     }
 
-    pub fn get(&self, (row, cell): Coords) -> Option<&Piece> {
+    pub fn get(&self, (row, cell): Coords) -> Option<Piece> {
         if row < 0 || cell < 0 || row >= self.height || cell >= self.width {
             return None;
         }
 
         let pos = row * self.width + cell;
-        self.positions.get(&pos)
+        let v = self.positions.get(&pos)?;
+
+        Some(*v)
     }
 
-    pub fn get_line(&self, (x, y): Coords, d: Direction, length: usize) -> Vec<Option<&Piece>> {
+    pub fn get_line(&self, (x, y): Coords, d: Direction, length: usize) -> Vec<Option<Piece>> {
         let inc: Coords = match d {
             Direction::East => (1, 0),
             Direction::South => (0, 1),

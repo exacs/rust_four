@@ -14,17 +14,17 @@ pub struct Game {
     winner: Option<Player>,
 }
 
-fn color_of_line (line: &Vec<Option<&Player>>) -> Option<Player> {
+fn color_of_line (line: &Vec<Option<Player>>) -> Option<Player> {
     let color = line[0]?;
 
     if line.iter().all(|&x| x == Some(color)) {
-        return Some(*color);
+        return Some(color);
     } else {
         return None;
     }
 }
 
-fn color_of_lines (lines: [Vec<Option<&Player>>; 4]) -> Option<Player> {
+fn color_of_lines (lines: [Vec<Option<Player>>; 4]) -> Option<Player> {
     lines.iter()
         .map(|line| color_of_line(line))
         .find(|&color| color != None)?
