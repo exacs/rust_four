@@ -34,14 +34,8 @@ impl Board {
             panic!("Board width and height should be positive");
         }
 
-        let mut columns = HashMap::new();
-
-        for i in 0..width {
-            columns.insert(i, width*(height-1) + i);
-        }
-
         Board {
-            columns,
+            columns: (0..width).map(|i| (i, width*(height-1) + i)).collect(),
             positions: HashMap::new(),
             height,
             width,
