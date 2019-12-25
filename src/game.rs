@@ -26,12 +26,6 @@ fn color_of_line (line: &Line) -> Option<Player> {
     }
 }
 
-fn color_of_lines (lines: Vec<Line>) -> Option<Player> {
-    lines.iter()
-        .map(|line| color_of_line(line))
-        .find(|&color| color != None)?
-}
-
 impl Game {
     pub fn new(width: i32, height: i32) -> Game {
         Game {
@@ -51,21 +45,19 @@ impl Game {
             Direction::SouthWest,
         ];
 
+        let mut combos:Vec<((i32, i32), Direction)> = Vec::new();
+
         for i in 0..self.width {
             for j in 0..self.height {
-                let lines: Vec<_> = directions.iter()
-                    .map(|&dir| self.board.get_line((i, j), dir, 4))
-                    .collect();
-
-                match color_of_lines(lines) {
-                    None => (),
-                    Some(c) => {
-                        self.winner = Some(c);
-                        return
-                    },
+                for k in directions.iter() {
+                    combos.push(((i, j), *k));
                 }
             }
         }
+
+        self.winner = combos.iter()
+            .map(|&(point, dir)| self.board.get_line(point, dir, 4))
+            .find_map(|line| color_of_line(&line));
     }
 
     pub fn play(&mut self, index: i32) {
