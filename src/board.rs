@@ -36,6 +36,6 @@ impl fmt::Display for Board {
             write!(f, "{} ", n)?
         }
 
-        writeln!(f, "")
+        write!(f, "")
     }
 }
