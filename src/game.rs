@@ -33,12 +33,12 @@ impl Game {
 }
 
 impl fmt::Display for Game {
-  fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-      writeln!(f, "{}", self.board)?;
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        writeln!(f, "{}", self.board)?;
 
-      match self.turn {
-        Player::Black => write!(f, "Its BLACK turn"),
-        Player::White => write!(f, "Its WHITE turn"),
-      }
-  }
+        match self.turn {
+            Player::Black => write!(f, "Its BLACK turn"),
+            Player::White => write!(f, "Its WHITE turn"),
+        }
+    }
 }
