@@ -4,10 +4,37 @@ use std::fmt;
 use board::Board;
 use board::BoardError;
 use board::Piece as Player;
+use board::Direction;
 
 pub struct Game {
     board: Board,
     turn: Player,
+    winner: Option<Player>,
+}
+
+fn color_of_line (line: &Vec<Option<&Player>>) -> Option<Player> {
+    let color = line[0]?;
+
+    for item in line.iter() {
+        match item {
+            None => return None,
+            Some(c) if color == *c => (),
+            Some(_) => return None,
+        }
+    }
+
+    return Some(*color);
+}
+
+fn color_of_lines (lines: [Vec<Option<&Player>>; 4]) -> Option<Player> {
+    for line in lines.iter() {
+        match color_of_line(line) {
+            None => (),
+            c => return c,
+        }
+    }
+
+    return None
 }
 
 impl Game {
@@ -17,6 +44,26 @@ impl Game {
         Game {
             board: board,
             turn: Player::Black,
+            winner: None,
+        }
+    }
+
+    fn guess_winner(&mut self) {
+        for i in 0..7 {
+            for j in 0..6 {
+                let line1 = self.board.get_line((i, j), Direction::South, 4);
+                let line2 = self.board.get_line((i, j), Direction::East, 4);
+                let line3 = self.board.get_line((i, j), Direction::SouthEast, 4);
+                let line4 = self.board.get_line((i, j), Direction::SouthWest, 4);
+
+                match color_of_lines([line1, line2, line3, line4]) {
+                    None => (),
+                    Some(c) => {
+                        self.winner = Some(c);
+                        return
+                    },
+                }
+            }
         }
     }
 
@@ -29,12 +76,19 @@ impl Game {
             Err(BoardError::FullColumn) => return,
             Err(_) => panic!("Error when playing"),
         }
+        self.guess_winner()
     }
 }
 
 impl fmt::Display for Game {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         writeln!(f, "{}", self.board)?;
+
+        match self.winner {
+            None => (),
+            Some(Player::Black) => writeln!(f, "BLACK won")?,
+            Some(Player::White) => writeln!(f, "WHITE won")?,
+        }
 
         match self.turn {
             Player::Black => write!(f, "Its BLACK turn"),
