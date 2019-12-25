@@ -29,7 +29,12 @@ impl Board {
     }
 
     pub fn play(&mut self, index: i32, piece: Piece) {
-        let pos = *self.columns.get(&index).expect("No position found");
+        let pos = *self.columns.get(&index)
+            .expect("Not possible to play in that column");
+
+        if pos < 0 {
+            panic!("The column is full")
+        }
 
         self.positions.insert(pos, piece);
         self.columns.insert(index, pos - WIDTH);
