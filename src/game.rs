@@ -2,11 +2,11 @@ mod board;
 
 use std::fmt;
 use board::Board;
-use board::Piece;
+use board::Piece as Player;
 
 pub struct Game {
     board: Board,
-    turn: Piece,
+    turn: Player,
 }
 
 impl Game {
@@ -15,15 +15,15 @@ impl Game {
 
         Game {
             board: board,
-            turn: Piece::Black,
+            turn: Player::Black,
         }
     }
 
     pub fn play(&mut self, index: i32) {
         self.board.play(index, self.turn);
         match self.turn {
-            Piece::Black => self.turn = Piece::White,
-            Piece::White => self.turn = Piece::Black,
+            Player::Black => self.turn = Player::White,
+            Player::White => self.turn = Player::Black,
         }
     }
 }
@@ -33,8 +33,8 @@ impl fmt::Display for Game {
       writeln!(f, "{}", self.board)?;
 
       match self.turn {
-        Piece::Black => write!(f, "Its BLACK turn"),
-        Piece::White => write!(f, "Its BLACK turn"),
+        Player::Black => write!(f, "Its BLACK turn"),
+        Player::White => write!(f, "Its WHITE turn"),
       }
   }
 }
