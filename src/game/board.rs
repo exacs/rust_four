@@ -10,6 +10,11 @@ pub enum Piece {
     White,
 }
 
+pub enum BoardError {
+    NonValidColumn,
+    FullColumn,
+}
+
 pub struct Board {
     positions: HashMap<i32, Piece>,
     columns: HashMap<i32, i32>,
@@ -29,16 +34,20 @@ impl Board {
         }
     }
 
-    pub fn play(&mut self, index: i32, piece: Piece) {
-        let pos = *self.columns.get(&index)
-            .expect("Not possible to play in that column");
+    pub fn play(&mut self, index: i32, piece: Piece) -> Result<(), BoardError> {
+        let pos = self.columns.get(&index)
+            .ok_or(BoardError::NonValidColumn)?;
+
+        let pos = *pos;
 
         if pos < 0 {
-            panic!("The column is full")
+            return Err(BoardError::FullColumn);
         }
 
         self.positions.insert(pos, piece);
         self.columns.insert(index, pos - WIDTH);
+
+        Ok(())
     }
 
     pub fn get(&self, row: i32, cell: i32) -> Option<&Piece> {

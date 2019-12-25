@@ -2,6 +2,7 @@ mod board;
 
 use std::fmt;
 use board::Board;
+use board::BoardError;
 use board::Piece as Player;
 
 pub struct Game {
@@ -20,10 +21,13 @@ impl Game {
     }
 
     pub fn play(&mut self, index: i32) {
-        self.board.play(index, self.turn);
-        match self.turn {
-            Player::Black => self.turn = Player::White,
-            Player::White => self.turn = Player::Black,
+        match self.board.play(index, self.turn) {
+            Ok(()) => match self.turn {
+                Player::Black => self.turn = Player::White,
+                Player::White => self.turn = Player::Black,
+            }
+            Err(BoardError::FullColumn) => return,
+            Err(_) => panic!("Error when playing"),
         }
     }
 }
