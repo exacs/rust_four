@@ -7,6 +7,8 @@ use board::Piece as Player;
 use board::Direction;
 
 pub struct Game {
+    height: i32,
+    width: i32,
     board: Board,
     turn: Player,
     winner: Option<Player>,
@@ -38,19 +40,19 @@ fn color_of_lines (lines: [Vec<Option<&Player>>; 4]) -> Option<Player> {
 }
 
 impl Game {
-    pub fn new() -> Game {
-        let board = Board::new();
-
+    pub fn new(width: i32, height: i32) -> Game {
         Game {
-            board: board,
+            width,
+            height,
+            board: Board::new(width, height),
             turn: Player::Black,
             winner: None,
         }
     }
 
     fn guess_winner(&mut self) {
-        for i in 0..7 {
-            for j in 0..6 {
+        for i in 0..self.width {
+            for j in 0..self.height {
                 let line1 = self.board.get_line((i, j), Direction::South, 4);
                 let line2 = self.board.get_line((i, j), Direction::East, 4);
                 let line3 = self.board.get_line((i, j), Direction::SouthEast, 4);

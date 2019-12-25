@@ -1,6 +1,3 @@
-const WIDTH: i32 = 7;
-const HEIGHT: i32 = 6;
-
 use std::fmt;
 use std::collections::HashMap;
 
@@ -18,6 +15,8 @@ pub enum BoardError {
 pub struct Board {
     positions: HashMap<i32, Piece>,
     columns: HashMap<i32, i32>,
+    width: i32,
+    height: i32,
 }
 
 pub enum Direction {
@@ -30,16 +29,18 @@ pub enum Direction {
 type Coords = (i32, i32);
 
 impl Board {
-    pub fn new() -> Board {
+    pub fn new(width: i32, height: i32) -> Board {
         let mut columns = HashMap::new();
 
-        for i in 0..WIDTH {
-            columns.insert(i, WIDTH*(HEIGHT-1) + i);
+        for i in 0..width {
+            columns.insert(i, width*(height-1) + i);
         }
 
         Board {
-            columns: columns,
+            columns,
             positions: HashMap::new(),
+            height,
+            width,
         }
     }
 
@@ -54,17 +55,17 @@ impl Board {
         }
 
         self.positions.insert(pos, piece);
-        self.columns.insert(index, pos - WIDTH);
+        self.columns.insert(index, pos - self.width);
 
         Ok(())
     }
 
     pub fn get(&self, (row, cell): Coords) -> Option<&Piece> {
-        if row < 0 || cell < 0 || row >= HEIGHT || cell >= WIDTH {
+        if row < 0 || cell < 0 || row >= self.height || cell >= self.width {
             return None;
         }
 
-        let pos = row * WIDTH + cell;
+        let pos = row * self.width + cell;
         self.positions.get(&pos)
     }
 
@@ -90,8 +91,8 @@ impl Board {
 
 impl fmt::Display for Board {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        for i in 0..HEIGHT {
-            for j in 0..WIDTH {
+        for i in 0..self.height {
+            for j in 0..self.width {
                 match self.get((i, j)) {
                     None => write!(f, "· ")?,
                     Some(Piece::Black) => write!(f, "X ")?,
@@ -101,7 +102,7 @@ impl fmt::Display for Board {
             writeln!(f)?
         }
 
-        for n in 0..WIDTH {
+        for n in 0..self.width {
             write!(f, "{} ", n)?
         }
 
