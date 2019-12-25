@@ -20,6 +20,8 @@ pub struct Board {
     columns: HashMap<i32, i32>,
 }
 
+type Coords = (i32, i32);
+
 impl Board {
     pub fn new() -> Board {
         let mut columns = HashMap::new();
@@ -50,7 +52,11 @@ impl Board {
         Ok(())
     }
 
-    pub fn get(&self, row: i32, cell: i32) -> Option<&Piece> {
+    pub fn get(&self, (row, cell): Coords) -> Option<&Piece> {
+        if row < 0 || cell < 0 || row >= HEIGHT || cell >= WIDTH {
+            return None;
+        }
+
         let pos = row * WIDTH + cell;
         self.positions.get(&pos)
     }
@@ -60,7 +66,7 @@ impl fmt::Display for Board {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         for i in 0..HEIGHT {
             for j in 0..WIDTH {
-                match self.get(i, j) {
+                match self.get((i, j)) {
                     None => write!(f, "· ")?,
                     Some(Piece::Black) => write!(f, "X ")?,
                     Some(Piece::White) => write!(f, "O ")?,
