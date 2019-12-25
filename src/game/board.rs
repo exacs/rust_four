@@ -68,7 +68,6 @@ impl Board {
     }
 
     pub fn get_line(&self, (x, y): Coords, d: Direction, length: usize) -> Vec<Option<&Piece>> {
-        let mut line = vec![None; length];
         let inc: Coords = match d {
             Direction::East => (1, 0),
             Direction::South => (0, 1),
@@ -76,14 +75,11 @@ impl Board {
             Direction::SouthWest => (-1, 1),
         };
 
-        for i in 0..length {
-            let j = i as i32;
-            let pos: Coords = (x + inc.0 * j, y + inc.1 * j);
-
-            line[i] = self.get(pos);
-        }
-
-        return line
+        (0..length)
+            .map(|i| i as i32)
+            .map(|i| (x + inc.0 * i, y + inc.1 * i))
+            .map(|i| self.get(i))
+            .collect()
     }
 }
 
