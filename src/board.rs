@@ -34,15 +34,18 @@ impl Board {
         self.positions.insert(pos, piece);
         self.columns.insert(index, pos - WIDTH);
     }
+
+    pub fn get(&self, row: i32, cell: i32) -> Option<&Piece> {
+        let pos = row * WIDTH + cell;
+        self.positions.get(&pos)
+    }
 }
 
 impl fmt::Display for Board {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         for i in 0..HEIGHT {
             for j in 0..WIDTH {
-                let pos = i * WIDTH + j;
-
-                match self.positions.get(&pos) {
+                match self.get(i, j) {
                     None => write!(f, "· ")?,
                     Some(Piece::Black) => write!(f, "X ")?,
                     Some(Piece::White) => write!(f, "O ")?,
