@@ -1,7 +1,7 @@
 use std::fmt;
 use std::collections::HashMap;
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Piece {
     Black,
     White,
@@ -30,6 +30,10 @@ type Coords = (i32, i32);
 
 impl Board {
     pub fn new(width: i32, height: i32) -> Board {
+        if width <= 0 || height <= 0 {
+            panic!("Board width and height should be positive");
+        }
+
         let mut columns = HashMap::new();
 
         for i in 0..width {
