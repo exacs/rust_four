@@ -17,15 +17,11 @@ pub struct Game {
 fn color_of_line (line: &Vec<Option<&Player>>) -> Option<Player> {
     let color = line[0]?;
 
-    for item in line.iter() {
-        match item {
-            None => return None,
-            Some(c) if color == *c => (),
-            Some(_) => return None,
-        }
+    if line.iter().all(|&x| x == Some(color)) {
+        return Some(*color);
+    } else {
+        return None;
     }
-
-    return Some(*color);
 }
 
 fn color_of_lines (lines: [Vec<Option<&Player>>; 4]) -> Option<Player> {
