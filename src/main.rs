@@ -1,18 +1,14 @@
-mod board;
+mod game;
+use game::Game;
 
 fn main() {
-    use board::Board;
-    use board::Piece;
-
     println!("Welcome to four-in-a-row!!! (implemented in Rust)");
-    let mut my_board = Board::new();
-    my_board.play(1, Piece::Black);
-    my_board.play(1, Piece::White);
-    my_board.play(1, Piece::White);
-    my_board.play(1, Piece::White);
-    my_board.play(1, Piece::White);
-    my_board.play(1, Piece::White);
-    my_board.play(1, Piece::White);
-    my_board.play(2, Piece::White);
-    println!("{}", my_board);
+    let mut my_game = Game::new();
+    my_game.play(1);
+    my_game.play(2);
+    my_game.play(1);
+    my_game.play(2);
+    my_game.play(1);
+    my_game.play(2);
+    println!("{}", my_game);
 }

@@ -4,6 +4,7 @@ const HEIGHT: i32 = 6;
 use std::fmt;
 use std::collections::HashMap;
 
+#[derive(Clone, Copy)]
 pub enum Piece {
     Black,
     White,
