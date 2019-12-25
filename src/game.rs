@@ -26,7 +26,7 @@ fn color_of_line (line: &Line) -> Option<Player> {
     }
 }
 
-fn color_of_lines (lines: [Line; 4]) -> Option<Player> {
+fn color_of_lines (lines: Vec<Line>) -> Option<Player> {
     lines.iter()
         .map(|line| color_of_line(line))
         .find(|&color| color != None)?
@@ -44,14 +44,20 @@ impl Game {
     }
 
     fn guess_winner(&mut self) {
+        let directions = [
+            Direction::South,
+            Direction::East,
+            Direction::SouthEast,
+            Direction::SouthWest,
+        ];
+
         for i in 0..self.width {
             for j in 0..self.height {
-                let line1 = self.board.get_line((i, j), Direction::South, 4);
-                let line2 = self.board.get_line((i, j), Direction::East, 4);
-                let line3 = self.board.get_line((i, j), Direction::SouthEast, 4);
-                let line4 = self.board.get_line((i, j), Direction::SouthWest, 4);
+                let lines: Vec<_> = directions.iter()
+                    .map(|&dir| self.board.get_line((i, j), dir, 4))
+                    .collect();
 
-                match color_of_lines([line1, line2, line3, line4]) {
+                match color_of_lines(lines) {
                     None => (),
                     Some(c) => {
                         self.winner = Some(c);

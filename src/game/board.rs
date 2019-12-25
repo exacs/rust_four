@@ -19,6 +19,7 @@ pub struct Board {
     height: i32,
 }
 
+#[derive(Clone, Copy)]
 pub enum Direction {
     South,
     East,
