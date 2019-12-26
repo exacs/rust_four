@@ -60,7 +60,22 @@ impl Game {
             .find_map(|line| color_of_line(&line));
     }
 
+    pub fn winner(&self) -> Option<Player> {
+        return self.winner
+    }
+
+    pub fn turn(&self) -> Option<Player> {
+        match self.winner {
+            None => Some(self.turn),
+            _ => None,
+        }
+    }
+
     pub fn play(&mut self, index: i32) {
+        if self.turn() == None {
+            return;
+        }
+
         match self.board.play(index, self.turn) {
             Ok(()) => match self.turn {
                 Player::Black => self.turn = Player::White,
@@ -77,15 +92,18 @@ impl fmt::Display for Game {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         writeln!(f, "{}", self.board)?;
 
-        match self.winner {
+        match self.winner() {
             None => (),
             Some(Player::Black) => writeln!(f, "BLACK won")?,
             Some(Player::White) => writeln!(f, "WHITE won")?,
         }
 
-        match self.turn {
-            Player::Black => write!(f, "Its BLACK turn"),
-            Player::White => write!(f, "Its WHITE turn"),
+        match self.turn() {
+            None => write!(f, "Game has finished")?,
+            Some(Player::Black) => write!(f, "Its BLACK turn")?,
+            Some(Player::White) => write!(f, "Its WHITE turn")?,
         }
+
+        write!(f, "")
     }
 }
