@@ -43,15 +43,19 @@ impl Board {
         }
     }
 
-    pub fn play(&mut self, index: i32, piece: Piece) -> Result<(), BoardError> {
-        let pos = self.columns.get(&index)
+    pub fn get_row(&self, column: i32) -> Result<i32, BoardError> {
+        let pos = self.columns.get(&column)
             .ok_or(BoardError::NonValidColumn)?;
 
-        let row = *pos;
-
-        if row < 0 {
+        if *pos < 0 {
             return Err(BoardError::FullColumn);
         }
+
+        Ok(*pos)
+    }
+
+    pub fn play(&mut self, index: i32, piece: Piece) -> Result<(), BoardError> {
+        let row = self.get_row(index)?;
 
         self.positions.insert((row, index), piece);
         self.columns.insert(index, row - 1);
