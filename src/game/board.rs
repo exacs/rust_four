@@ -1,6 +1,8 @@
 use std::fmt;
 use std::collections::HashMap;
 
+type Coords = (i32, i32);
+
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Piece {
     Black,
@@ -13,7 +15,7 @@ pub enum BoardError {
 }
 
 pub struct Board {
-    positions: HashMap<i32, Piece>,
+    positions: HashMap<Coords, Piece>,
     columns: HashMap<i32, i32>,
     width: i32,
     height: i32,
@@ -27,8 +29,6 @@ pub enum Direction {
     SouthWest,
 }
 
-type Coords = (i32, i32);
-
 impl Board {
     pub fn new(width: i32, height: i32) -> Board {
         if width <= 0 || height <= 0 {
@@ -36,7 +36,7 @@ impl Board {
         }
 
         Board {
-            columns: (0..width).map(|i| (i, width*(height-1) + i)).collect(),
+            columns: (0..width).map(|i| (i, height-1)).collect(),
             positions: HashMap::new(),
             height,
             width,
@@ -47,30 +47,25 @@ impl Board {
         let pos = self.columns.get(&index)
             .ok_or(BoardError::NonValidColumn)?;
 
-        let pos = *pos;
+        let row = *pos;
 
-        if pos < 0 {
+        if row < 0 {
             return Err(BoardError::FullColumn);
         }
 
-        self.positions.insert(pos, piece);
-        self.columns.insert(index, pos - self.width);
+        self.positions.insert((row, index), piece);
+        self.columns.insert(index, row - 1);
 
         Ok(())
     }
 
-    pub fn get(&self, (row, cell): Coords) -> Option<Piece> {
-        if row < 0 || cell < 0 || row >= self.height || cell >= self.width {
-            return None;
-        }
-
-        let pos = row * self.width + cell;
-        let v = self.positions.get(&pos)?;
+    pub fn get(&self, coords: &Coords) -> Option<Piece> {
+        let v = self.positions.get(coords)?;
 
         Some(*v)
     }
 
-    pub fn get_line(&self, (x, y): Coords, d: Direction, length: usize) -> Vec<Option<Piece>> {
+    pub fn get_line(&self, (x, y): &Coords, d: Direction, length: usize) -> Vec<Option<Piece>> {
         let inc: Coords = match d {
             Direction::East => (1, 0),
             Direction::South => (0, 1),
@@ -80,8 +75,8 @@ impl Board {
 
         (0..length)
             .map(|i| i as i32)
-            .map(|i| (x + inc.0 * i, y + inc.1 * i))
-            .map(|i| self.get(i))
+            .map(|i| (*x + inc.0 * i, *y + inc.1 * i))
+            .map(|i| self.get(&i))
             .collect()
     }
 }
@@ -90,7 +85,7 @@ impl fmt::Display for Board {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         for i in 0..self.height {
             for j in 0..self.width {
-                match self.get((i, j)) {
+                match self.get(&(i, j)) {
                     None => write!(f, "· ")?,
                     Some(Piece::Black) => write!(f, "X ")?,
                     Some(Piece::White) => write!(f, "O ")?,

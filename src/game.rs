@@ -56,7 +56,7 @@ impl Game {
         }
 
         self.winner = combos.iter()
-            .map(|&(point, dir)| self.board.get_line(point, dir, 4))
+            .map(|&(point, dir)| self.board.get_line(&point, dir, 4))
             .find_map(|line| color_of_line(&line));
     }
 
