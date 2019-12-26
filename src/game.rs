@@ -1,4 +1,4 @@
-mod board;
+pub mod board;
 
 use std::fmt;
 use board::Board;
