@@ -5,6 +5,7 @@ use board::Board;
 use board::BoardError;
 use board::Piece as Color;
 use board::Direction;
+use crate::player::Player;
 
 pub struct Game {
     height: i32,
@@ -12,6 +13,8 @@ pub struct Game {
     board: Board,
     turn: Color,
     winner: Option<Color>,
+    black_player: Box<Player>,
+    white_player: Box<Player>,
 }
 
 type Line = Vec<Option<Color>>;
@@ -27,13 +30,26 @@ fn color_of_line (line: &Line) -> Option<Color> {
 }
 
 impl Game {
-    pub fn new(width: i32, height: i32) -> Game {
+    pub fn new(width: i32, height: i32, white_player: Box<Player>, black_player: Box<Player>) -> Game {
         Game {
             width,
             height,
+            black_player,
+            white_player,
             board: Board::new(width, height),
             turn: Color::Black,
             winner: None,
+        }
+    }
+
+    pub fn run(&mut self) {
+        while self.turn() != None {
+            let next_movement = match self.turn {
+                Color::Black => self.black_player.next_movement(&self),
+                Color::White => self.white_player.next_movement(&self),
+            };
+
+            self.play(next_movement)
         }
     }
 
@@ -98,14 +114,14 @@ impl fmt::Display for Game {
 
         match self.winner() {
             None => (),
-            Some(Color::Black) => writeln!(f, "BLACK won")?,
-            Some(Color::White) => writeln!(f, "WHITE won")?,
+            Some(Color::Black) => writeln!(f, "{} (X) won", self.black_player.name().unwrap_or("BLACK".to_string()))?,
+            Some(Color::White) => writeln!(f, "{} (O) won", self.white_player.name().unwrap_or("WHITE".to_string()))?,
         }
 
         match self.turn() {
             None => write!(f, "Game has finished")?,
-            Some(Color::Black) => write!(f, "Its BLACK turn")?,
-            Some(Color::White) => write!(f, "Its WHITE turn")?,
+            Some(Color::Black) => write!(f, "Its {} (X) turn", self.black_player.name().unwrap_or("BLACK".to_string()))?,
+            Some(Color::White) => write!(f, "Its {} (O) turn", self.white_player.name().unwrap_or("WHITE".to_string()))?,
         }
 
         write!(f, "")

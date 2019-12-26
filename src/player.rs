@@ -1,12 +1,37 @@
 use crate::game::Game;
 use std::io;
-use rand::Rng;
 
-pub struct HumanPlayer;
-pub struct RandomPlayer;
+pub trait Player {
+  fn name(&self) -> Option<String> {
+    None
+  }
+
+  fn next_movement(&self, game: &Game) -> i32;
+}
+
+pub struct HumanPlayer {
+  name: String,
+}
 
 impl HumanPlayer {
-  pub fn next_movement(game: &Game) -> i32 {
+  pub fn new() -> HumanPlayer {
+    let mut input = String::new();
+    println!("What is your name? ");
+    io::stdin().read_line(&mut input)
+      .expect("Failed to read line");
+
+    HumanPlayer {
+      name: String::from(input.trim()),
+    }
+  }
+}
+
+impl Player for HumanPlayer {
+  fn name(&self) -> Option<String> {
+    return Some(self.name.to_string());
+  }
+
+  fn next_movement(&self, game: &Game) -> i32 {
     println!("{}", game);
     let mut input = String::new();
     io::stdin().read_line(&mut input)
@@ -16,6 +41,7 @@ impl HumanPlayer {
   }
 }
 
+/*
 impl RandomPlayer {
   pub fn next_movement(game: &Game) -> i32 {
     let columns = game.board().get_unfilled_columns();
@@ -24,3 +50,4 @@ impl RandomPlayer {
     return columns[r];
   }
 }
+*/
