@@ -3,20 +3,20 @@ pub mod board;
 use std::fmt;
 use board::Board;
 use board::BoardError;
-use board::Piece as Player;
+use board::Piece as Color;
 use board::Direction;
 
 pub struct Game {
     height: i32,
     width: i32,
     board: Board,
-    turn: Player,
-    winner: Option<Player>,
+    turn: Color,
+    winner: Option<Color>,
 }
 
-type Line = Vec<Option<Player>>;
+type Line = Vec<Option<Color>>;
 
-fn color_of_line (line: &Line) -> Option<Player> {
+fn color_of_line (line: &Line) -> Option<Color> {
     let color = line[0]?;
 
     if line.iter().all(|&x| x == Some(color)) {
@@ -32,7 +32,7 @@ impl Game {
             width,
             height,
             board: Board::new(width, height),
-            turn: Player::Black,
+            turn: Color::Black,
             winner: None,
         }
     }
@@ -64,11 +64,11 @@ impl Game {
         return &self.board;
     }
 
-    pub fn winner(&self) -> Option<Player> {
+    pub fn winner(&self) -> Option<Color> {
         return self.winner
     }
 
-    pub fn turn(&self) -> Option<Player> {
+    pub fn turn(&self) -> Option<Color> {
         match self.winner {
             None => Some(self.turn),
             _ => None,
@@ -82,8 +82,8 @@ impl Game {
 
         match self.board.play(index, self.turn) {
             Ok(()) => match self.turn {
-                Player::Black => self.turn = Player::White,
-                Player::White => self.turn = Player::Black,
+                Color::Black => self.turn = Color::White,
+                Color::White => self.turn = Color::Black,
             }
             Err(BoardError::FullColumn) => return,
             Err(_) => panic!("Error when playing"),
@@ -98,14 +98,14 @@ impl fmt::Display for Game {
 
         match self.winner() {
             None => (),
-            Some(Player::Black) => writeln!(f, "BLACK won")?,
-            Some(Player::White) => writeln!(f, "WHITE won")?,
+            Some(Color::Black) => writeln!(f, "BLACK won")?,
+            Some(Color::White) => writeln!(f, "WHITE won")?,
         }
 
         match self.turn() {
             None => write!(f, "Game has finished")?,
-            Some(Player::Black) => write!(f, "Its BLACK turn")?,
-            Some(Player::White) => write!(f, "Its WHITE turn")?,
+            Some(Color::Black) => write!(f, "Its BLACK turn")?,
+            Some(Color::White) => write!(f, "Its WHITE turn")?,
         }
 
         write!(f, "")
