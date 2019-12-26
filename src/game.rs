@@ -11,7 +11,7 @@ pub struct Game {
     height: i32,
     width: i32,
     board: Board,
-    turn: Color,
+    turn: Option<Color>,
     winner: Option<Color>,
     black_player: Box<Player>,
     white_player: Box<Player>,
@@ -37,14 +37,14 @@ impl Game {
             black_player,
             white_player,
             board: Board::new(width, height),
-            turn: Color::Black,
+            turn: Some(Color::Black),
             winner: None,
         }
     }
 
     pub fn run(&mut self) {
-        while self.turn() != None {
-            let next_movement = match self.turn {
+        while self.turn != None {
+            let next_movement = match self.turn.unwrap() {
                 Color::Black => self.black_player.next_movement(&self),
                 Color::White => self.white_player.next_movement(&self),
             };
@@ -76,35 +76,24 @@ impl Game {
             .find_map(|line| color_of_line(&line));
     }
 
-    pub fn board(&self) -> &Board {
-        return &self.board;
-    }
-
-    pub fn winner(&self) -> Option<Color> {
-        return self.winner
-    }
-
-    pub fn turn(&self) -> Option<Color> {
-        match self.winner {
-            None => Some(self.turn),
-            _ => None,
-        }
-    }
-
     pub fn play(&mut self, index: i32) {
-        if self.turn() == None {
+        if self.turn == None {
             return;
         }
 
-        match self.board.play(index, self.turn) {
-            Ok(()) => match self.turn {
-                Color::Black => self.turn = Color::White,
-                Color::White => self.turn = Color::Black,
+        match self.board.play(index, self.turn.unwrap()) {
+            Ok(()) => match self.turn.unwrap() {
+                Color::Black => self.turn = Some(Color::White),
+                Color::White => self.turn = Some(Color::Black),
             }
             Err(BoardError::FullColumn) => return,
             Err(_) => panic!("Error when playing"),
         }
-        self.guess_winner()
+        self.guess_winner();
+
+        if self.winner != None {
+            self.turn = None;
+        }
     }
 }
 
@@ -112,13 +101,13 @@ impl fmt::Display for Game {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         writeln!(f, "{}", self.board)?;
 
-        match self.winner() {
+        match self.winner {
             None => (),
             Some(Color::Black) => writeln!(f, "{} (X) won", self.black_player.name().unwrap_or("BLACK".to_string()))?,
             Some(Color::White) => writeln!(f, "{} (O) won", self.white_player.name().unwrap_or("WHITE".to_string()))?,
         }
 
-        match self.turn() {
+        match self.turn {
             None => write!(f, "Game has finished")?,
             Some(Color::Black) => write!(f, "Its {} (X) turn", self.black_player.name().unwrap_or("BLACK".to_string()))?,
             Some(Color::White) => write!(f, "Its {} (O) turn", self.white_player.name().unwrap_or("WHITE".to_string()))?,
