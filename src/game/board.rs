@@ -54,6 +54,13 @@ impl Board {
         Ok(*pos)
     }
 
+    pub fn get_unfilled_columns(&self) -> Vec<i32> {
+        return self.columns.iter()
+            .filter(|(&i, _)| self.get_row(i).is_ok())
+            .map(|(&i, _)| i)
+            .collect();
+    }
+
     pub fn play(&mut self, index: i32, piece: Piece) -> Result<(), BoardError> {
         let row = self.get_row(index)?;
 
