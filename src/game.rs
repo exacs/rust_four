@@ -60,6 +60,10 @@ impl Game {
             .find_map(|line| color_of_line(&line));
     }
 
+    pub fn board(&self) -> &Board {
+        return &self.board;
+    }
+
     pub fn winner(&self) -> Option<Player> {
         return self.winner
     }
