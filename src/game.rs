@@ -1,11 +1,12 @@
 pub mod board;
+pub mod player;
 
 use std::fmt;
 use board::Board;
 use board::BoardError;
 use board::Piece as Color;
 use board::Direction;
-use crate::player::Player;
+use player::Player;
 
 pub struct Game {
     height: i32,
