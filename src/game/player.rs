@@ -10,12 +10,14 @@ pub trait Player {
     fn next_movement(&self, game: &Game) -> i32;
 }
 
+#[allow(dead_code)]
 pub struct HumanPlayer {
     name: String,
 }
 
 pub struct RandomPlayer;
 
+#[allow(dead_code)]
 impl HumanPlayer {
     pub fn new() -> HumanPlayer {
         let mut input = String::new();

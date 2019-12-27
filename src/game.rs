@@ -34,8 +34,8 @@ impl Game {
     pub fn new(
         width: i32,
         height: i32,
-        white_player: Box<Player>,
         black_player: Box<Player>,
+        white_player: Box<Player>,
     ) -> Game {
         Game {
             width,
@@ -48,7 +48,7 @@ impl Game {
         }
     }
 
-    pub fn run(&mut self) {
+    pub fn run(&mut self) -> Option<Color> {
         while self.turn != None {
             let next_movement = match self.turn.unwrap() {
                 Color::Black => self.black_player.next_movement(&self),
@@ -57,6 +57,8 @@ impl Game {
 
             self.play(next_movement)
         }
+
+        return self.winner
     }
 
     fn guess_winner(&mut self) {
