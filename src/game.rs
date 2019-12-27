@@ -3,14 +3,11 @@ pub mod player;
 
 use board::Board;
 use board::BoardError;
-use board::Direction;
 use board::Piece as Color;
 use player::Player;
 use std::fmt;
 
 pub struct Game<'a> {
-    height: i32,
-    width: i32,
     board: Board,
     turn: Option<Color>,
     winner: Option<Color>,
@@ -38,8 +35,6 @@ impl<'a> Game<'a> {
         white_player: &'a Player,
     ) -> Game<'a> {
         Game {
-            width,
-            height,
             black_player,
             white_player,
             board: Board::new(width, height),
@@ -62,26 +57,8 @@ impl<'a> Game<'a> {
     }
 
     fn guess_winner(&mut self) {
-        let directions = [
-            Direction::South,
-            Direction::East,
-            Direction::SouthEast,
-            Direction::SouthWest,
-        ];
-
-        let mut combos: Vec<((i32, i32), Direction)> = Vec::new();
-
-        for i in 0..self.width {
-            for j in 0..self.height {
-                for k in directions.iter() {
-                    combos.push(((i, j), *k));
-                }
-            }
-        }
-
-        self.winner = combos
-            .iter()
-            .map(|&(point, dir)| self.board.get_line(&point, dir, 4))
+        self.winner = self.board.all_iter()
+            .map(|(point, dir)| self.board.get_line(&point, dir, 4))
             .find_map(|line| color_of_line(&line));
     }
 
