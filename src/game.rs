@@ -8,14 +8,14 @@ use board::Piece as Color;
 use player::Player;
 use std::fmt;
 
-pub struct Game {
+pub struct Game<'a> {
     height: i32,
     width: i32,
     board: Board,
     turn: Option<Color>,
     winner: Option<Color>,
-    black_player: Box<Player>,
-    white_player: Box<Player>,
+    black_player: &'a Player,
+    white_player: &'a Player,
 }
 
 type Line = Vec<Option<Color>>;
@@ -30,13 +30,13 @@ fn color_of_line(line: &Line) -> Option<Color> {
     }
 }
 
-impl Game {
+impl<'a> Game<'a> {
     pub fn new(
         width: i32,
         height: i32,
-        black_player: Box<Player>,
-        white_player: Box<Player>,
-    ) -> Game {
+        black_player: &'a Player,
+        white_player: &'a Player,
+    ) -> Game<'a> {
         Game {
             width,
             height,
@@ -58,7 +58,7 @@ impl Game {
             self.play(next_movement)
         }
 
-        return self.winner
+        return self.winner;
     }
 
     fn guess_winner(&mut self) {
@@ -106,7 +106,7 @@ impl Game {
     }
 }
 
-impl fmt::Display for Game {
+impl<'a> fmt::Display for Game<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         writeln!(f, "{}", self.board)?;
 
