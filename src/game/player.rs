@@ -1,4 +1,5 @@
 use crate::game::Game;
+use rand::prelude::*;
 use std::io;
 
 pub trait Player {
@@ -12,6 +13,8 @@ pub trait Player {
 pub struct HumanPlayer {
     name: String,
 }
+
+pub struct RandomPlayer;
 
 impl HumanPlayer {
     pub fn new() -> HumanPlayer {
@@ -43,13 +46,21 @@ impl Player for HumanPlayer {
     }
 }
 
-/*
 impl RandomPlayer {
-  pub fn next_movement(game: &Game) -> i32 {
-    let columns = game.board().get_unfilled_columns();
-    let r = rand::thread_rng().gen_range(0, columns.len());
-
-    return columns[r];
-  }
+    pub fn new() -> RandomPlayer {
+        RandomPlayer {}
+    }
 }
-*/
+
+impl Player for RandomPlayer {
+    fn name(&self) -> Option<String> {
+        Some("Random IA".to_string())
+    }
+
+    fn next_movement(&self, game: &Game) -> i32 {
+        let columns = game.board.get_unfilled_columns();
+        let mut rng = thread_rng();
+
+        return *columns.choose(&mut rng).unwrap();
+    }
+}
