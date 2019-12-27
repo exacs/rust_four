@@ -1,3 +1,4 @@
+use crate::game::board::Piece;
 use crate::game::Game;
 use rand::prelude::*;
 use std::io;
@@ -7,12 +8,15 @@ pub trait Player {
         None
     }
 
+    fn set_color(&mut self, _color: Piece) {}
+
     fn next_movement(&self, game: &Game) -> i32;
 }
 
 #[allow(dead_code)]
 pub struct HumanPlayer {
     name: String,
+    color: Option<Piece>,
 }
 
 pub struct RandomPlayer;
@@ -28,6 +32,7 @@ impl HumanPlayer {
 
         HumanPlayer {
             name: String::from(input.trim()),
+            color: None,
         }
     }
 }
@@ -45,6 +50,10 @@ impl Player for HumanPlayer {
             .expect("Failed to read line");
 
         return input.trim().parse::<i32>().expect("Not parseable!!");
+    }
+
+    fn set_color(&mut self, color: Piece) {
+        self.color = Some(color);
     }
 }
 

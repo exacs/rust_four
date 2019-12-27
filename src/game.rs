@@ -55,22 +55,32 @@ impl<'a> Game<'a> {
         return self.winner;
     }
 
-    fn get_winner(&self) -> Option<Color> {
-        return self.board.all_iter()
+    pub fn get_winner(&self) -> Option<Color> {
+        self.winner
+    }
+
+    pub fn get_board(&self) -> &Board {
+        &self.board
+    }
+
+    fn set_winner(&mut self) {
+        self.winner = self
+            .board
+            .all_iter()
             .map(|(point, dir)| self.board.get_line(&point, dir, 4))
             .find_map(|line| color_of_line(&line));
     }
 
-    fn get_next_turn(&self) -> Option<Color> {
+    fn set_next_turn(&mut self) {
         if self.winner != None {
-            return None;
+            self.turn = None;
         }
 
         if self.board.get_unfilled_columns().len() == 0 {
-            return None;
+            self.turn = None;
         }
 
-        match self.turn {
+        self.turn = match self.turn {
             None => None,
             Some(Color::Black) => Some(Color::White),
             Some(Color::White) => Some(Color::Black),
@@ -82,9 +92,11 @@ impl<'a> Game<'a> {
             return;
         }
 
-        self.board.play(index, self.turn.unwrap()).expect("Error while playing");
-        self.winner = self.get_winner();
-        self.turn = self.get_next_turn();
+        self.board
+            .play(index, self.turn.unwrap())
+            .expect("Error while playing");
+        self.set_winner();
+        self.set_next_turn();
     }
 }
 

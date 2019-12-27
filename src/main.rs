@@ -22,6 +22,7 @@ fn main() {
             Some(Piece::White) => result.1 = result.1 + 1,
             _ => (),
         }
+        p1.learn(&my_game);
     }
     println!("Result {:?}", result)
 }
