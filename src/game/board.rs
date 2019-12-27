@@ -9,6 +9,7 @@ pub enum Piece {
     White,
 }
 
+#[derive(Debug)]
 pub enum BoardError {
     NonValidColumn,
     FullColumn,

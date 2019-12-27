@@ -2,7 +2,6 @@ pub mod board;
 pub mod player;
 
 use board::Board;
-use board::BoardError;
 use board::Piece as Color;
 use player::Player;
 use std::fmt;
@@ -56,10 +55,26 @@ impl<'a> Game<'a> {
         return self.winner;
     }
 
-    fn guess_winner(&mut self) {
-        self.winner = self.board.all_iter()
+    fn get_winner(&self) -> Option<Color> {
+        return self.board.all_iter()
             .map(|(point, dir)| self.board.get_line(&point, dir, 4))
             .find_map(|line| color_of_line(&line));
+    }
+
+    fn get_next_turn(&self) -> Option<Color> {
+        if self.winner != None {
+            return None;
+        }
+
+        if self.board.get_unfilled_columns().len() == 0 {
+            return None;
+        }
+
+        match self.turn {
+            None => None,
+            Some(Color::Black) => Some(Color::White),
+            Some(Color::White) => Some(Color::Black),
+        }
     }
 
     fn play(&mut self, index: i32) {
@@ -67,19 +82,9 @@ impl<'a> Game<'a> {
             return;
         }
 
-        match self.board.play(index, self.turn.unwrap()) {
-            Ok(()) => match self.turn.unwrap() {
-                Color::Black => self.turn = Some(Color::White),
-                Color::White => self.turn = Some(Color::Black),
-            },
-            Err(BoardError::FullColumn) => return,
-            Err(_) => panic!("Error when playing"),
-        }
-        self.guess_winner();
-
-        if self.winner != None {
-            self.turn = None;
-        }
+        self.board.play(index, self.turn.unwrap()).expect("Error while playing");
+        self.winner = self.get_winner();
+        self.turn = self.get_next_turn();
     }
 }
 
