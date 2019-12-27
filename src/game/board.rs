@@ -43,7 +43,7 @@ impl Board {
         }
     }
 
-    pub fn get_row(&self, column: i32) -> Result<i32, BoardError> {
+    fn get_row(&self, column: i32) -> Result<i32, BoardError> {
         let pos = self
             .columns
             .get(&column)
