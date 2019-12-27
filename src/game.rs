@@ -1,12 +1,12 @@
 pub mod board;
 pub mod player;
 
-use std::fmt;
 use board::Board;
 use board::BoardError;
-use board::Piece as Color;
 use board::Direction;
+use board::Piece as Color;
 use player::Player;
+use std::fmt;
 
 pub struct Game {
     height: i32,
@@ -20,7 +20,7 @@ pub struct Game {
 
 type Line = Vec<Option<Color>>;
 
-fn color_of_line (line: &Line) -> Option<Color> {
+fn color_of_line(line: &Line) -> Option<Color> {
     let color = line[0]?;
 
     if line.iter().all(|&x| x == Some(color)) {
@@ -31,7 +31,12 @@ fn color_of_line (line: &Line) -> Option<Color> {
 }
 
 impl Game {
-    pub fn new(width: i32, height: i32, white_player: Box<Player>, black_player: Box<Player>) -> Game {
+    pub fn new(
+        width: i32,
+        height: i32,
+        white_player: Box<Player>,
+        black_player: Box<Player>,
+    ) -> Game {
         Game {
             width,
             height,
@@ -62,7 +67,7 @@ impl Game {
             Direction::SouthWest,
         ];
 
-        let mut combos:Vec<((i32, i32), Direction)> = Vec::new();
+        let mut combos: Vec<((i32, i32), Direction)> = Vec::new();
 
         for i in 0..self.width {
             for j in 0..self.height {
@@ -72,7 +77,8 @@ impl Game {
             }
         }
 
-        self.winner = combos.iter()
+        self.winner = combos
+            .iter()
             .map(|&(point, dir)| self.board.get_line(&point, dir, 4))
             .find_map(|line| color_of_line(&line));
     }
@@ -86,7 +92,7 @@ impl Game {
             Ok(()) => match self.turn.unwrap() {
                 Color::Black => self.turn = Some(Color::White),
                 Color::White => self.turn = Some(Color::Black),
-            }
+            },
             Err(BoardError::FullColumn) => return,
             Err(_) => panic!("Error when playing"),
         }
@@ -104,14 +110,30 @@ impl fmt::Display for Game {
 
         match self.winner {
             None => (),
-            Some(Color::Black) => writeln!(f, "{} (X) won", self.black_player.name().unwrap_or("BLACK".to_string()))?,
-            Some(Color::White) => writeln!(f, "{} (O) won", self.white_player.name().unwrap_or("WHITE".to_string()))?,
+            Some(Color::Black) => writeln!(
+                f,
+                "{} (X) won",
+                self.black_player.name().unwrap_or("BLACK".to_string())
+            )?,
+            Some(Color::White) => writeln!(
+                f,
+                "{} (O) won",
+                self.white_player.name().unwrap_or("WHITE".to_string())
+            )?,
         }
 
         match self.turn {
             None => write!(f, "Game has finished")?,
-            Some(Color::Black) => write!(f, "Its {} (X) turn", self.black_player.name().unwrap_or("BLACK".to_string()))?,
-            Some(Color::White) => write!(f, "Its {} (O) turn", self.white_player.name().unwrap_or("WHITE".to_string()))?,
+            Some(Color::Black) => write!(
+                f,
+                "Its {} (X) turn",
+                self.black_player.name().unwrap_or("BLACK".to_string())
+            )?,
+            Some(Color::White) => write!(
+                f,
+                "Its {} (O) turn",
+                self.white_player.name().unwrap_or("WHITE".to_string())
+            )?,
         }
 
         write!(f, "")

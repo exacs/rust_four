@@ -1,5 +1,5 @@
-use std::fmt;
 use std::collections::HashMap;
+use std::fmt;
 
 type Coords = (i32, i32);
 
@@ -36,7 +36,7 @@ impl Board {
         }
 
         Board {
-            columns: (0..width).map(|i| (i, height-1)).collect(),
+            columns: (0..width).map(|i| (i, height - 1)).collect(),
             positions: HashMap::new(),
             height,
             width,
@@ -44,7 +44,9 @@ impl Board {
     }
 
     pub fn get_row(&self, column: i32) -> Result<i32, BoardError> {
-        let pos = self.columns.get(&column)
+        let pos = self
+            .columns
+            .get(&column)
             .ok_or(BoardError::NonValidColumn)?;
 
         if *pos < 0 {
@@ -55,7 +57,9 @@ impl Board {
     }
 
     pub fn get_unfilled_columns(&self) -> Vec<i32> {
-        return self.columns.iter()
+        return self
+            .columns
+            .iter()
             .filter(|(&i, _)| self.get_row(i).is_ok())
             .map(|(&i, _)| i)
             .collect();

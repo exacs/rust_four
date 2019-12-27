@@ -1,6 +1,6 @@
 mod game;
-use game::Game;
 use game::player::HumanPlayer;
+use game::Game;
 
 fn main() {
     let p1 = HumanPlayer::new();
