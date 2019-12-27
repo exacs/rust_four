@@ -83,7 +83,7 @@ impl Game {
             .find_map(|line| color_of_line(&line));
     }
 
-    pub fn play(&mut self, index: i32) {
+    fn play(&mut self, index: i32) {
         if self.turn == None {
             return;
         }
