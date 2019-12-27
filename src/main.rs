@@ -1,10 +1,10 @@
 mod game;
 mod smart_player;
 
-// use game::player::HumanPlayer;
+use game::player::*;
 use game::board::Piece;
-use game::player::RandomPlayer;
 use game::Game;
+
 use smart_player::SmartPlayer;
 
 fn main() {
@@ -12,8 +12,10 @@ fn main() {
 
     println!("Welcome to four-in-a-row!!! (implemented in Rust)");
 
+    let mut p1 = SmartPlayer::new(Box::new(RandomPlayer::new()));
     let p2 = RandomPlayer::new();
-    let p1 = SmartPlayer::new(Box::new(RandomPlayer::new()));
+
+    p1.set_color(Piece::Black);
 
     for _i in 0..500 {
         let mut my_game = Game::new(7, 6, &p1, &p2);
