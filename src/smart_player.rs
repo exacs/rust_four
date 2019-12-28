@@ -3,6 +3,8 @@ pub mod database;
 use crate::game::board::Piece;
 use crate::game::player::Player;
 use crate::game::Game;
+use database::Database;
+use rand::prelude::*;
 
 pub struct SmartPlayer {
     dumb_player: Box<Player>,
@@ -10,7 +12,7 @@ pub struct SmartPlayer {
 }
 
 fn save_winner_sequence(seq: &[i32]) {
-    database::save_seq("winner", seq);
+    Database::save_seq("winner", seq);
 
     match seq.split_last() {
         None => (),
@@ -19,11 +21,25 @@ fn save_winner_sequence(seq: &[i32]) {
 }
 
 fn save_loser_sequence(seq: &[i32]) {
-    database::save_seq("loser", seq);
+    Database::save_seq("loser", seq);
 }
 
 fn save_draw_sequence(seq: &[i32]) {
-    database::save_seq("draw", seq);
+    Database::save_seq("draw", seq);
+}
+
+fn get_loser_sequence(seq: &[i32]) -> Vec<i32> {
+    let mut banned = Vec::new();
+
+    for s1 in Database::read_seq("loser", seq.len() + 1) {
+        let banned_sequence = s1.split_last().unwrap();
+
+        if seq == banned_sequence.1 {
+            banned.push(*banned_sequence.0);
+        }
+    }
+
+    return banned;
 }
 
 impl SmartPlayer {
@@ -51,8 +67,18 @@ impl Player for SmartPlayer {
     }
 
     fn next_movement(&self, game: &Game) -> i32 {
-        // println!("Hello, I am smart!");
-        self.dumb_player.next_movement(game)
+        let options = game.get_board().get_unfilled_columns();
+        let mut rng = thread_rng();
+
+        let seq = &game.get_board().get_sequence()[..];
+        let banned = get_loser_sequence(seq);
+
+        if banned.len() > 0 {
+            println!("Found {}", banned.len());
+        }
+
+        self.dumb_player.next_movement(game);
+        return *options.choose(&mut rng).unwrap();
     }
 
     fn set_color(&mut self, color: Piece) {

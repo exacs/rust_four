@@ -17,7 +17,7 @@ fn main() {
 
     p1.set_color(Piece::Black);
 
-    for _i in 0..500 {
+    for _i in 0..1000 {
         let mut my_game = Game::new(7, 6, &p1, &p2);
         match my_game.run() {
             Some(Piece::Black) => result.0 = result.0 + 1,
