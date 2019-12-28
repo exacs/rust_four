@@ -12,8 +12,8 @@ fn main() {
 
     println!("Welcome to four-in-a-row!!! (implemented in Rust)");
 
-    let mut p1 = SmartPlayer::new(Box::new(RandomPlayer::new(None)));
-    let p2 = RandomPlayer::new(None);
+    let mut p1 = SmartPlayer::new(Box::new(RandomPlayer::new()));
+    let p2 = RandomPlayer::new();
 
     p1.set_color(Piece::Black);
 

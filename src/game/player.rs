@@ -60,7 +60,7 @@ impl Player for HumanPlayer {
 }
 
 impl RandomPlayer {
-    pub fn new(seed: Option<i32>) -> RandomPlayer {
+    pub fn new() -> RandomPlayer {
         RandomPlayer {
             rng: thread_rng(),
         }
