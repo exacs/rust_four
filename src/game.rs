@@ -1,10 +1,9 @@
 pub mod board;
-pub mod player;
-
-use board::Board;
+use crate::players::Player;
 use board::Piece as Color;
-use player::Player;
 use std::fmt;
+
+pub type Board = board::Board;
 
 pub struct Game<'a> {
     board: Board,

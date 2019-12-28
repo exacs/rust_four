@@ -1,8 +1,8 @@
 pub mod database;
 
 use crate::game::board::Piece;
-use crate::game::player::Player;
 use crate::game::Game;
+use crate::players::Player;
 use database::Database;
 use rand::prelude::*;
 
