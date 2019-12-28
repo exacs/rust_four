@@ -19,7 +19,9 @@ pub struct HumanPlayer {
     color: Option<Piece>,
 }
 
-pub struct RandomPlayer;
+pub struct RandomPlayer {
+    rng: ThreadRng,
+}
 
 #[allow(dead_code)]
 impl HumanPlayer {
@@ -59,7 +61,9 @@ impl Player for HumanPlayer {
 
 impl RandomPlayer {
     pub fn new() -> RandomPlayer {
-        RandomPlayer {}
+        RandomPlayer {
+            rng: thread_rng(),
+        }
     }
 }
 
@@ -70,7 +74,7 @@ impl Player for RandomPlayer {
 
     fn next_movement(&self, game: &Game) -> i32 {
         let columns = game.board.get_unfilled_columns();
-        let mut rng = thread_rng();
+        let mut rng = self.rng;
 
         return *columns.choose(&mut rng).unwrap();
     }
