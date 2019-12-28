@@ -1,3 +1,5 @@
+pub mod database;
+
 use crate::game::board::Piece;
 use crate::game::player::Player;
 use crate::game::Game;
@@ -5,6 +7,23 @@ use crate::game::Game;
 pub struct SmartPlayer {
     dumb_player: Box<Player>,
     color: Option<Piece>,
+}
+
+fn save_winner_sequence(seq: &[i32]) {
+    database::save_seq("winner", seq);
+
+    match seq.split_last() {
+        None => (),
+        Some((_, seq2)) => save_loser_sequence(seq2),
+    }
+}
+
+fn save_loser_sequence(seq: &[i32]) {
+    database::save_seq("loser", seq);
+}
+
+fn save_draw_sequence(seq: &[i32]) {
+    database::save_seq("draw", seq);
 }
 
 impl SmartPlayer {
@@ -17,11 +36,11 @@ impl SmartPlayer {
 
     pub fn learn(&self, game: &Game) {
         if game.get_winner() == None {
-            println!("This was a draw!");
+            save_draw_sequence(game.get_board().get_sequence());
         } else if game.get_winner() == self.color {
-            println!("I've won in {} moves", game.get_board().get_sequence().len());
+            save_winner_sequence(game.get_board().get_sequence());
         } else {
-            println!("I've lost! in {} moves", game.get_board().get_sequence().len());
+            save_winner_sequence(game.get_board().get_sequence());
         }
     }
 }

@@ -1,8 +1,8 @@
 mod game;
 mod smart_player;
 
-use game::player::*;
 use game::board::Piece;
+use game::player::*;
 use game::Game;
 
 use smart_player::SmartPlayer;
