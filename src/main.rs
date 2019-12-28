@@ -1,12 +1,10 @@
 mod game;
 mod players;
-mod smart_player;
+mod database;
 
 use game::board::Piece;
 use game::Game;
 use players::*;
-
-use smart_player::SmartPlayer;
 
 fn main() {
     let mut result = (0, 0);

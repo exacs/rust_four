@@ -1,9 +1,7 @@
-pub mod database;
-
 use crate::game::board::Piece;
 use crate::game::Game;
 use crate::players::Player;
-use database::Database;
+use crate::database::Database;
 use rand::prelude::*;
 
 pub struct SmartPlayer {

@@ -1,10 +1,12 @@
-pub mod human_player;
-pub mod random_player;
+mod human_player;
+mod random_player;
+mod smart_player;
 
 use crate::game::board::*;
 use crate::game::*;
 
 pub type RandomPlayer = random_player::RandomPlayer;
+pub type SmartPlayer = smart_player::SmartPlayer;
 
 #[allow(dead_code)]
 pub type HumanPlayer = human_player::HumanPlayer;
