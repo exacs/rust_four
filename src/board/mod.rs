@@ -12,7 +12,7 @@ pub enum Color {
     White,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum BoardError {
     NonValidColumn,
     FullColumn,
@@ -108,13 +108,31 @@ mod tests {
 
     #[test]
     #[should_panic]
-    fn invalid_size() {
+    fn create_invalid_size() {
         Board::new(0, 0);
     }
 
     #[test]
-    fn valid_size() {
+    fn create_valid_size() {
         Board::new(1, 1);
+    }
+
+    #[test]
+    fn get_row_coords() {
+        let b = Board::new(1, 1);
+        assert_eq!(b.get_row(0).unwrap(), 0);
+    }
+
+    #[test]
+    fn get_full_column() -> Result<(), BoardError> {
+        let mut b = Board::new(1, 1);
+        b.play(0, Color::White)?;
+
+        if b.get_row(0).unwrap_err() == BoardError::FullColumn {
+            Ok(())
+        } else {
+            panic!();
+        }
     }
 }
 
