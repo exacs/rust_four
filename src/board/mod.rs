@@ -1,7 +1,7 @@
 mod fmt;
-mod lines_iterator;
+mod directions_iterator;
 
-use lines_iterator::LinesIterator;
+use directions_iterator::DirectionsIterator;
 use std::collections::HashMap;
 
 type Coords = (i32, i32);
@@ -97,8 +97,8 @@ impl Board {
             .collect()
     }
 
-    pub fn all_iter(&self) -> LinesIterator {
-        LinesIterator::new(self.width, self.height)
+    pub fn all_directions(&self) -> DirectionsIterator {
+        DirectionsIterator::new(self.width, self.height)
     }
 }
 

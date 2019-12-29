@@ -1,6 +1,6 @@
 use super::*;
 
-pub struct LinesIterator {
+pub struct DirectionsIterator {
     width: i32,
     height: i32,
     i: i32,
@@ -8,9 +8,9 @@ pub struct LinesIterator {
     k: usize,
 }
 
-impl LinesIterator {
-    pub fn new(width: i32, height: i32) -> LinesIterator {
-        LinesIterator {
+impl DirectionsIterator {
+    pub fn new(width: i32, height: i32) -> DirectionsIterator {
+        DirectionsIterator {
             width,
             height,
             i: -1,
@@ -20,7 +20,7 @@ impl LinesIterator {
     }
 }
 
-impl Iterator for LinesIterator {
+impl Iterator for DirectionsIterator {
     type Item = ((i32, i32), Direction);
 
     fn next(&mut self) -> Option<Self::Item> {

@@ -62,7 +62,7 @@ impl<'a> Game<'a> {
     fn set_winner(&mut self) {
         self.winner = self
             .board
-            .all_iter()
+            .all_directions()
             .map(|(point, dir)| self.board.get_line(&point, dir, 4))
             .find_map(|line| color_of_line(line));
     }
