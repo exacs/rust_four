@@ -1,6 +1,6 @@
-mod iterator;
+mod lines_iterator;
 
-use iterator::BoardIterator;
+use lines_iterator::LinesIterator;
 use std::collections::HashMap;
 use std::fmt;
 
@@ -97,8 +97,8 @@ impl Board {
             .collect()
     }
 
-    pub fn all_iter(&self) -> BoardIterator {
-        BoardIterator::new(self.width, self.height)
+    pub fn all_iter(&self) -> LinesIterator {
+        LinesIterator::new(self.width, self.height)
     }
 }
 
