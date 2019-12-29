@@ -1,4 +1,4 @@
-use crate::game::board::Piece;
+use crate::board::Color;
 use crate::game::*;
 use crate::players::Player;
 use std::io;
@@ -6,7 +6,7 @@ use std::io;
 #[allow(dead_code)]
 pub struct HumanPlayer {
     name: String,
-    color: Option<Piece>,
+    color: Option<Color>,
 }
 
 #[allow(dead_code)]
@@ -40,7 +40,7 @@ impl Player for HumanPlayer {
         return input.trim().parse::<i32>().expect("Not parseable!!");
     }
 
-    fn set_color(&mut self, color: Piece) {
+    fn set_color(&mut self, color: Color) {
         self.color = Some(color);
     }
 }

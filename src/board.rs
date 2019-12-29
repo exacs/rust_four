@@ -4,7 +4,7 @@ use std::fmt;
 type Coords = (i32, i32);
 
 #[derive(Clone, Copy, PartialEq, Debug)]
-pub enum Piece {
+pub enum Color {
     Black,
     White,
 }
@@ -16,7 +16,7 @@ pub enum BoardError {
 }
 
 pub struct Board {
-    positions: HashMap<Coords, Piece>,
+    positions: HashMap<Coords, Color>,
     columns: HashMap<i32, i32>,
     width: i32,
     height: i32,
@@ -76,7 +76,7 @@ impl Board {
             .collect();
     }
 
-    pub fn play(&mut self, index: i32, piece: Piece) -> Result<(), BoardError> {
+    pub fn play(&mut self, index: i32, piece: Color) -> Result<(), BoardError> {
         let row = self.get_row(index)?;
 
         self.positions.insert((row, index), piece);
@@ -86,13 +86,13 @@ impl Board {
         Ok(())
     }
 
-    pub fn get(&self, coords: &Coords) -> Option<Piece> {
+    pub fn get(&self, coords: &Coords) -> Option<Color> {
         let v = self.positions.get(coords)?;
 
         Some(*v)
     }
 
-    pub fn get_line(&self, (x, y): &Coords, d: Direction, length: usize) -> Vec<Option<Piece>> {
+    pub fn get_line(&self, (x, y): &Coords, d: Direction, length: usize) -> Vec<Option<Color>> {
         let inc: Coords = match d {
             Direction::East => (1, 0),
             Direction::South => (0, 1),
@@ -128,8 +128,8 @@ impl fmt::Display for Board {
             for j in 0..self.width {
                 match self.get(&(i, j)) {
                     None => write!(f, "· ")?,
-                    Some(Piece::Black) => write!(f, "X ")?,
-                    Some(Piece::White) => write!(f, "O ")?,
+                    Some(Color::Black) => write!(f, "X ")?,
+                    Some(Color::White) => write!(f, "O ")?,
                 }
             }
             writeln!(f)?

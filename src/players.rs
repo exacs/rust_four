@@ -2,7 +2,7 @@ mod human_player;
 mod random_player;
 mod smart_player;
 
-use crate::game::board::*;
+use crate::board::*;
 use crate::game::*;
 
 pub type RandomPlayer = random_player::RandomPlayer;
@@ -16,7 +16,7 @@ pub trait Player {
         None
     }
 
-    fn set_color(&mut self, _color: Piece) {}
+    fn set_color(&mut self, _color: Color) {}
 
     fn next_movement(&self, game: &Game) -> i32;
 }

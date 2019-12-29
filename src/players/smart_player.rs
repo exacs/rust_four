@@ -1,5 +1,5 @@
 use crate::database;
-use crate::game::board::Piece;
+use crate::board::Color;
 use crate::game::Game;
 use crate::players::Player;
 use rand::prelude::*;
@@ -7,7 +7,7 @@ use std::collections::HashMap;
 
 pub struct SmartPlayer {
     dumb_player: Box<Player>,
-    color: Option<Piece>,
+    color: Option<Color>,
 }
 
 fn save_winner_sequence(seq: &[i32]) {
@@ -135,7 +135,7 @@ impl Player for SmartPlayer {
         }
     }
 
-    fn set_color(&mut self, color: Piece) {
+    fn set_color(&mut self, color: Color) {
         self.color = Some(color);
     }
 }
