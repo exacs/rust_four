@@ -1,7 +1,9 @@
-mod fmt;
 mod directions_iterator;
+mod fmt;
+mod lines_iterator;
 
 use directions_iterator::DirectionsIterator;
+use lines_iterator::LinesIterator;
 use std::collections::HashMap;
 
 type Coords = (i32, i32);
@@ -82,19 +84,8 @@ impl Board {
         self.positions.get(coords)
     }
 
-    pub fn get_line(&self, (x, y): &Coords, d: Direction, length: usize) -> Vec<Option<&Color>> {
-        let inc: Coords = match d {
-            Direction::East => (1, 0),
-            Direction::South => (0, 1),
-            Direction::SouthEast => (1, 1),
-            Direction::SouthWest => (-1, 1),
-        };
-
-        (0..length)
-            .map(|i| i as i32)
-            .map(|i| (*x + inc.0 * i, *y + inc.1 * i))
-            .map(|i| self.get(&i))
-            .collect()
+    pub fn all_lines(&self) -> LinesIterator {
+        LinesIterator::new(self, self.all_directions(), 4)
     }
 
     pub fn all_directions(&self) -> DirectionsIterator {
