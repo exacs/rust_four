@@ -26,7 +26,7 @@ fn save_draw_sequence(seq: &[i32]) {
     database::save_seq("draw", seq);
 }
 
-fn get_loser_sequence(seq: &[i32]) -> Vec<i32> {
+fn get_loser_movements(seq: &[i32]) -> Vec<i32> {
     let mut banned = Vec::new();
 
     for s1 in database::read_seq("loser", seq.len() + 1) {
@@ -40,6 +40,7 @@ fn get_loser_sequence(seq: &[i32]) -> Vec<i32> {
     return banned;
 }
 
+#[allow(dead_code)]
 impl SmartPlayer {
     pub fn new(dumb_player: Box<Player>) -> SmartPlayer {
         SmartPlayer {
@@ -65,18 +66,23 @@ impl Player for SmartPlayer {
     }
 
     fn next_movement(&self, game: &Game) -> i32 {
-        let options = game.get_board().get_unfilled_columns();
-        let mut rng = thread_rng();
-
         let seq = &game.get_board().get_sequence()[..];
-        let banned = get_loser_sequence(seq);
+        let banned = get_loser_movements(seq);
 
-        if banned.len() > 0 {
-            println!("Found {}", banned.len());
+        let mut rng = thread_rng();
+        let mut options = vec![];
+
+        for column in game.get_board().get_unfilled_columns() {
+            if !banned.contains(&column) {
+                options.push(column);
+            }
         }
 
-        self.dumb_player.next_movement(game);
-        return *options.choose(&mut rng).unwrap();
+        if options.len() > 0 {
+            return *options.choose(&mut rng).unwrap();
+        } else {
+            return self.dumb_player.next_movement(game);
+        }
     }
 
     fn set_color(&mut self, color: Piece) {
