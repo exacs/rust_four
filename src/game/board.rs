@@ -158,10 +158,13 @@ impl Iterator for BoardIterator {
 
         if self.i >= self.width {
             self.j += 1;
+            self.i = 0;
         }
 
         if self.j >= self.height {
-            self.k += 1
+            self.k += 1;
+            self.j = 0;
+            self.i = 0;
         }
 
         if self.k >= directions.len() {
