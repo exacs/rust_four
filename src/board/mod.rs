@@ -102,6 +102,22 @@ impl Board {
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    #[should_panic]
+    fn invalid_size() {
+        Board::new(0, 0);
+    }
+
+    #[test]
+    fn valid_size() {
+        Board::new(1, 1);
+    }
+}
+
 impl fmt::Display for Board {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         for i in 0..self.height {
