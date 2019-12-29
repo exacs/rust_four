@@ -66,21 +66,26 @@ fn count_conditions(filename: &str, seq: &[i32]) -> HashMap<i32, i32> {
     return count2;
 }
 
-fn weighed_random(options: &Vec<i32>, negative_weights: HashMap<i32, i32>) -> &i32 {
+fn weighed_random(
+    options: &Vec<i32>,
+    positive_weights: HashMap<i32, i32>,
+    negative_weights: HashMap<i32, i32>,
+) -> &i32 {
     let mut weights = HashMap::new();
     let mut rng = thread_rng();
 
-    let min_weight = negative_weights
-        .values()
-        .max()
-        .unwrap_or(&0);
+    let min_weight = negative_weights.values().max().unwrap_or(&0);
 
     for key in options {
-        let value = 1 + *min_weight - negative_weights.get(&key).unwrap_or(&0);
+        let neg = negative_weights.get(&key).unwrap_or(&0);
+        let pos = negative_weights.get(&key).unwrap_or(&0);
+        let value = 1 + *min_weight - neg + pos;
         weights.insert(key, value);
     }
 
-    return options.choose_weighted(&mut rng, |item| weights.get(item).unwrap()).unwrap();
+    return options
+        .choose_weighted(&mut rng, |item| weights.get(item).unwrap())
+        .unwrap();
 }
 
 #[allow(dead_code)]
@@ -120,7 +125,11 @@ impl Player for SmartPlayer {
         }
 
         if options.len() > 0 {
-            return *weighed_random(&options, count_conditions("loser", seq));
+            return *weighed_random(
+                &options,
+                count_conditions("winner", seq),
+                count_conditions("loser", seq),
+            );
         } else {
             return self.dumb_player.next_movement(game);
         }
