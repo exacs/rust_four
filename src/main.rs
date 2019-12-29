@@ -1,7 +1,7 @@
+mod board;
 mod database;
 mod game;
 mod players;
-mod board;
 
 use board::*;
 use game::Game;

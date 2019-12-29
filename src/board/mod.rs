@@ -78,13 +78,11 @@ impl Board {
         Ok(())
     }
 
-    pub fn get(&self, coords: &Coords) -> Option<Color> {
-        let v = self.positions.get(coords)?;
-
-        Some(*v)
+    pub fn get(&self, coords: &Coords) -> Option<&Color> {
+        self.positions.get(coords)
     }
 
-    pub fn get_line(&self, (x, y): &Coords, d: Direction, length: usize) -> Vec<Option<Color>> {
+    pub fn get_line(&self, (x, y): &Coords, d: Direction, length: usize) -> Vec<Option<&Color>> {
         let inc: Coords = match d {
             Direction::East => (1, 0),
             Direction::South => (0, 1),

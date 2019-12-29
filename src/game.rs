@@ -11,13 +11,11 @@ pub struct Game<'a> {
     sequence: Vec<i32>,
 }
 
-type Line = Vec<Option<Color>>;
-
-fn color_of_line(line: &Line) -> Option<Color> {
+fn color_of_line(line: Vec<Option<&Color>>) -> Option<Color> {
     let color = line[0]?;
 
     if line.iter().all(|&x| x == Some(color)) {
-        return Some(color);
+        return Some(*color);
     } else {
         return None;
     }
@@ -66,7 +64,7 @@ impl<'a> Game<'a> {
             .board
             .all_iter()
             .map(|(point, dir)| self.board.get_line(&point, dir, 4))
-            .find_map(|line| color_of_line(&line));
+            .find_map(|line| color_of_line(line));
     }
 
     fn set_next_turn(&mut self) {
