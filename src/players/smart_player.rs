@@ -1,5 +1,5 @@
-use crate::database;
 use crate::board::Color;
+use crate::database;
 use crate::game::Game;
 use crate::players::Player;
 use rand::prelude::*;
@@ -78,7 +78,7 @@ fn weighed_random(
 
     for key in options {
         let neg = negative_weights.get(&key).unwrap_or(&0);
-        let pos = negative_weights.get(&key).unwrap_or(&0);
+        let pos = positive_weights.get(&key).unwrap_or(&0);
         let value = 1 + *min_weight - neg + pos;
         weights.insert(key, value);
     }
@@ -99,11 +99,11 @@ impl SmartPlayer {
 
     pub fn learn(&self, game: &Game) {
         if game.get_winner() == None {
-            save_draw_sequence(game.get_board().get_sequence());
+            save_draw_sequence(game.get_sequence());
         } else if game.get_winner() == self.color {
-            save_winner_sequence(game.get_board().get_sequence());
+            save_winner_sequence(game.get_sequence());
         } else {
-            save_winner_sequence(game.get_board().get_sequence());
+            save_winner_sequence(game.get_sequence());
         }
     }
 }
@@ -114,7 +114,7 @@ impl Player for SmartPlayer {
     }
 
     fn next_movement(&self, game: &Game) -> i32 {
-        let seq = &game.get_board().get_sequence()[..];
+        let seq = &game.get_sequence()[..];
         let banned = get_loser_movements(seq);
         let mut options = vec![];
 

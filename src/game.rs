@@ -8,6 +8,7 @@ pub struct Game<'a> {
     winner: Option<Color>,
     black_player: &'a Player,
     white_player: &'a Player,
+    sequence: Vec<i32>,
 }
 
 type Line = Vec<Option<Color>>;
@@ -35,6 +36,7 @@ impl<'a> Game<'a> {
             board: Board::new(width, height),
             turn: Some(Color::Black),
             winner: None,
+            sequence: vec![],
         }
     }
 
@@ -93,6 +95,11 @@ impl<'a> Game<'a> {
             .expect("Error while playing");
         self.set_winner();
         self.set_next_turn();
+        self.sequence.push(index);
+    }
+
+    pub fn get_sequence(&self) -> &Vec<i32> {
+        &self.sequence
     }
 }
 

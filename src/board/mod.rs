@@ -20,7 +20,6 @@ pub struct Board {
     columns: HashMap<i32, i32>,
     width: i32,
     height: i32,
-    sequence: Vec<i32>,
 }
 
 #[derive(Clone, Copy)]
@@ -48,7 +47,6 @@ impl Board {
         Board {
             columns: (0..width).map(|i| (i, height - 1)).collect(),
             positions: HashMap::new(),
-            sequence: vec![],
             height,
             width,
         }
@@ -81,7 +79,6 @@ impl Board {
 
         self.positions.insert((row, index), piece);
         self.columns.insert(index, row - 1);
-        self.sequence.push(index);
 
         Ok(())
     }
@@ -115,10 +112,6 @@ impl Board {
             j: 0,
             k: 0,
         }
-    }
-
-    pub fn get_sequence(&self) -> &Vec<i32> {
-        &self.sequence
     }
 }
 
