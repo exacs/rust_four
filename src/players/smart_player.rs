@@ -1,7 +1,7 @@
+use crate::database;
 use crate::game::board::Piece;
 use crate::game::Game;
 use crate::players::Player;
-use crate::database::Database;
 use rand::prelude::*;
 
 pub struct SmartPlayer {
@@ -10,7 +10,7 @@ pub struct SmartPlayer {
 }
 
 fn save_winner_sequence(seq: &[i32]) {
-    Database::save_seq("winner", seq);
+    database::save_seq("winner", seq);
 
     match seq.split_last() {
         None => (),
@@ -19,17 +19,17 @@ fn save_winner_sequence(seq: &[i32]) {
 }
 
 fn save_loser_sequence(seq: &[i32]) {
-    Database::save_seq("loser", seq);
+    database::save_seq("loser", seq);
 }
 
 fn save_draw_sequence(seq: &[i32]) {
-    Database::save_seq("draw", seq);
+    database::save_seq("draw", seq);
 }
 
 fn get_loser_sequence(seq: &[i32]) -> Vec<i32> {
     let mut banned = Vec::new();
 
-    for s1 in Database::read_seq("loser", seq.len() + 1) {
+    for s1 in database::read_seq("loser", seq.len() + 1) {
         let banned_sequence = s1.split_last().unwrap();
 
         if seq == banned_sequence.1 {

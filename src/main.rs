@@ -1,6 +1,6 @@
+mod database;
 mod game;
 mod players;
-mod database;
 
 use game::board::Piece;
 use game::Game;
